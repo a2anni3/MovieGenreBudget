@@ -1,0 +1,42 @@
+---
+title: "MovieGenreBudget"
+author: "Annie Seo"
+date: "07/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I predict that the budget of all movies regardless of genre will increase over the years due to inflation and the growth of the film industry as technology advances, cinemas open, and as cultural globalization of media increases. However, movie genres like animation and action will have a higher budget than romance and comedy due to these genres tending to be CGI/VFX heavy with "out of this world" effects, while romance and comedy tend to take place in “normal life”.
+
+```{r}
+library(dplyr)  
+library(ggplot2)
+movies = read.csv("MOVIES.csv")
+
+#Budget over the years based on genre
+genre_year = movies %>% filter(genre == 'Animation' |genre == 'Action'|genre == 'Comedy'|genre == 'Romance')%>% group_by(year, genre) %>% summarise(avg_budget=mean(budget, na.rm=T))
+print.data.frame(genre_year)
+
+ggplot(genre_year, aes(x = year, y=avg_budget, group = 3))+geom_point(aes(color = genre))+geom_line(aes(group = genre)) +ggtitle("Budget of Genres over the Years")
+```
+
+Animation movies had their average budget increase over the years until the 2010s, where it abruptly began to drop. However, action movies had their average budget increase steadily over the years. Comedy movies had a slight increase in their budget over the years, but mainly stayed within the same range from the 2000s and beyond. Romance movies had a zero budget for the longest time until the 2000s where they saw an increase in average budget, but it dropped to zero yet again in 2014. Overall throughout the years, action and animation movies tend to have a higher average budget than comedy and romance movies. This graph shows that throughout the years, action and animation movies tend to have a higher average budget than comedy and romance movies and the 4 movie genres had a higher average budget in the 2010s compared to the 1990s and experience more increases than decreases, so we can conclude that the average movie budget tends to rise as the years go by and there is a difference in movie budget based on genre (most likely due to effects pertaining to the storyline). 
+
+
+How does country affect the average budget? 
+
+I predict movies filmed in the USA will have the highest budget for most genres throughout the years because the USA has the most recognized film industry in the world (Hollywood), so they will tend to invest more into movies and global marketing/distribution since they are confident their films can attract a crowd. To show this, I will compare statistics from the USA, China, and UK, as these countries are the top 3 countries in terms of their worldwide box office according to the website, "The Numbers".
+
+
+```{r}
+#3b
+genre_year_country = movies %>% filter(country == 'USA'|country == 'UK'|country == 'China', genre == 'Animation' |genre == 'Action'|genre == 'Comedy'|genre == 'Romance')%>% group_by(year, genre, country) %>% summarise(avg_budget=mean(budget, na.rm=T))
+print.data.frame(genre_year_country)
+
+ggplot(genre_year_country, aes(x = year, y=avg_budget, group = 3))+geom_point(aes(color = genre))+geom_line(aes(group = genre))+facet_wrap(genre_year_country$country)+ggtitle("Budget of Genres over the Years of China, UK, USA")
+```
+
+This graph shows that the USA only has the highest budget for the genres animation and romance throughout the years. However, this is not the strongest claim as China lacks strong data on their animation and romance genres. Overall, the USA does not particularly stand out for having a higher budget for movies than other countries with dominant entertainment industries. Therefore, a well recognized film industry does not equate to a higher budget or investment in their films
